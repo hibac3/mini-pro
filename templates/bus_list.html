@@ -1,137 +1,171 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Available Buses</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<title>Buses</title>
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(to right, #1e3c72, #2a5298);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+<style>
 
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 520px;
-            box-shadow: 0px 15px 35px rgba(0,0,0,0.3);
-            animation: fadeIn 0.6s ease-in-out;
-        }
+body{
+font-family: Arial, sans-serif;
+background:#2f4f8f;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+}
 
-        h2 {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.container{
 
-        .bus-card {
-            display: flex;
-            align-items: center;
-            border: 1px solid #eee;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
+background:#eaeaea;
+padding:35px;
+border-radius:15px;
+width:520px;
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
 
-        .bus-card:hover {
-            background: #f5f8ff;
-            transform: translateY(-4px);
-            box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
-        }
+}
 
-        .icon {
-            font-size: 35px;
-            margin-right: 15px;
-        }
+h2{
 
-        .details {
-            flex-grow: 1;
-        }
+text-align:center;
+margin-bottom:25px;
 
-        .bus-name {
-            font-weight: 600;
-            font-size: 18px;
-        }
+}
 
-        .route {
-            font-size: 14px;
-            color: #555;
-            margin: 5px 0;
-        }
+.bus-card{
 
-        .arrival {
-            font-weight: bold;
-            color: green;
-        }
+background:#efefef;
+border-radius:12px;
+padding:18px;
+margin-bottom:18px;
+display:flex;
+align-items:center;
+cursor:pointer;
+transition:0.25s;
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+}
 
-        .back {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 14px;
-        }
+.bus-card:hover{
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+transform:scale(1.02);
+box-shadow:0 6px 15px rgba(0,0,0,0.2);
+
+}
+
+.bus-icon{
+
+font-size:30px;
+margin-right:15px;
+
+}
+
+.bus-info{
+
+line-height:1.5;
+
+}
+
+.bus-name{
+
+font-weight:bold;
+font-size:16px;
+
+}
+
+.route{
+
+color:#555;
+font-size:14px;
+
+}
+
+.arrival{
+
+color:green;
+font-weight:bold;
+
+}
+
+.recommend{
+
+background:#22c55e;
+color:white;
+padding:4px 8px;
+border-radius:6px;
+font-size:12px;
+display:inline-block;
+margin-top:4px;
+
+}
+
+.search-again{
+
+text-align:center;
+margin-top:20px;
+
+}
+
+a{
+
+text-decoration:none;
+color:black;
+
+}
+
+</style>
+
 </head>
+
+
 <body>
 
 <div class="container">
-    <h2>🚌 Buses from {{ source }} to {{ destination }}</h2>
 
-    {% for bus in buses %}
-    <a href="/bus/{{ bus.id }}">
-        <div class="bus-card">
-            <div class="icon">🚌</div>
-            <div class="details">
-                <div class="bus-name">{{ bus.name }}</div>
-                <div class="route">{{ bus.route }}</div>
-                <div class="arrival">
-                    Arriving in <span class="timer" data-time="{{ bus.arrival.split(' ')[2] }}"></span> mins
-                </div>
-            </div>
-        </div>
-    </a>
-    {% endfor %}
+<h2>🚌 Buses from {{source}} to {{destination}}</h2>
 
-    <a class="back" href="/">⬅ Search Again</a>
+
+{% for bus in buses %}
+
+<a href="/bus/{{bus.id}}">
+
+<div class="bus-card">
+
+<div class="bus-icon">🚌</div>
+
+<div class="bus-info">
+
+<div class="bus-name">{{bus.name}}</div>
+
+<div class="route">{{bus.route}}</div>
+
+<div class="arrival">{{bus.arrival}}</div>
+
+<!-- ⭐ AI Recommendation (only addition) -->
+{% if bus.id == best_bus %}
+
+<div class="recommend">
+⭐ AI Recommended Bus
 </div>
 
-<script>
-    // Animated Countdown Timer
-    const timers = document.querySelectorAll(".timer");
+{% endif %}
 
-    timers.forEach(timer => {
-        let timeLeft = parseInt(timer.dataset.time);
-        timer.innerText = timeLeft;
+</div>
 
-        setInterval(() => {
-            if (timeLeft > 0) {
-                timeLeft--;
-                timer.innerText = timeLeft;
-            } else {
-                timer.innerText = "Arrived";
-            }
-        }, 60000); // decreases every 1 minute
-    });
-</script>
+</div>
+
+</a>
+
+{% endfor %}
+
+
+<div class="search-again">
+
+<a href="/">← Search Again</a>
+
+</div>
+
+</div>
 
 </body>
 </html>

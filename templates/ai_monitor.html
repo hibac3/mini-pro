@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>AI Smart Bus Monitoring Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+margin:0;
+}
+
+h1{
+padding:20px;
+}
+
+.container{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:20px;
+padding:20px;
+}
+
+.card{
+background:#1e293b;
+padding:15px;
+border-radius:12px;
+box-shadow:0px 8px 20px rgba(0,0,0,0.4);
+}
+
+.video{
+width:100%;
+border-radius:10px;
+border:3px solid #334155;
+margin-bottom:10px;
+}
+
+.data{
+font-size:16px;
+margin:6px 0;
+}
+
+.progress{
+width:100%;
+height:12px;
+background:#334155;
+border-radius:10px;
+overflow:hidden;
+margin:10px 0;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:green;
+transition:width 0.5s;
+}
+
+.status{
+margin-top:8px;
+font-weight:bold;
+}
+
+.low{
+color:#22c55e;
+}
+
+.medium{
+color:#f59e0b;
+}
+
+.high{
+color:#ef4444;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>🚌 AI Smart Bus Monitoring Dashboard</h1>
+
+<div class="container">
+
+<!-- BUS 1 -->
+<div class="card">
+
+<h2>Bus 1 Camera</h2>
+
+<img class="video" src="/video/1">
+
+<div class="data">Passengers: <span id="p1">0</span></div>
+<div class="data">Available Seats: <span id="s1">0</span></div>
+<div class="data">Crowd Level: <span id="c1" class="low">Low</span></div>
+
+<div class="progress">
+<div id="bar1" class="bar"></div>
+</div>
+
+<div id="status1" class="status low">🟢 Bus Comfortable</div>
+
+</div>
+
+
+<!-- BUS 2 -->
+<div class="card">
+
+<h2>Bus 2 Camera</h2>
+
+<img class="video" src="/video/2">
+
+<div class="data">Passengers: <span id="p2">0</span></div>
+<div class="data">Available Seats: <span id="s2">0</span></div>
+<div class="data">Crowd Level: <span id="c2" class="low">Low</span></div>
+
+<div class="progress">
+<div id="bar2" class="bar"></div>
+</div>
+
+<div id="status2" class="status low">🟢 Bus Comfortable</div>
+
+</div>
+
+
+<!-- BUS 3 -->
+<div class="card">
+
+<h2>Bus 3 Camera</h2>
+
+<img class="video" src="/video/3">
+
+<div class="data">Passengers: <span id="p3">0</span></div>
+<div class="data">Available Seats: <span id="s3">0</span></div>
+<div class="data">Crowd Level: <span id="c3" class="low">Low</span></div>
+
+<div class="progress">
+<div id="bar3" class="bar"></div>
+</div>
+
+<div id="status3" class="status low">🟢 Bus Comfortable</div>
+
+</div>
+
+</div>
+
+<script>
+
+function updateBus(id){
+
+fetch(`/api/bus/${id}`)
+.then(r=>r.json())
+.then(data=>{
+
+document.getElementById("p"+id).innerText=data.passengers
+document.getElementById("s"+id).innerText=data.available
+
+let crowd=data.crowd
+
+let crowdElement=document.getElementById("c"+id)
+let status=document.getElementById("status"+id)
+let bar=document.getElementById("bar"+id)
+
+crowdElement.innerText=crowd
+crowdElement.className=crowd.toLowerCase()
+
+let percent=(data.passengers/40)*100
+
+bar.style.width=percent+"%"
+
+if(crowd=="Low"){
+
+bar.style.background="#22c55e"
+status.innerHTML="🟢 Bus Comfortable"
+status.className="status low"
+
+}
+
+else if(crowd=="Medium"){
+
+bar.style.background="#f59e0b"
+status.innerHTML="🟠 Bus Getting Crowded"
+status.className="status medium"
+
+}
+
+else{
+
+bar.style.background="#ef4444"
+status.innerHTML="🔴 Bus Almost Full"
+status.className="status high"
+
+}
+
+})
+
+}
+
+setInterval(()=>{
+
+updateBus(1)
+updateBus(2)
+updateBus(3)
+
+},3000)
+
+</script>
+
+</body>
+</html>
